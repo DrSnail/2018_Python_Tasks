@@ -12,6 +12,7 @@ def XOR_cipher(string, key):
     # string = int.from_bytes(string, 'big')
     return chip
 
+
 def XOR_unchiper(string, key):
     # print(chip.bit_length())
     # return chip.to_bytes((chip.bit_length() + 7) // 8, 'big').decode()
