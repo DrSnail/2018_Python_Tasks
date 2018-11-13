@@ -13,7 +13,7 @@ def XOR_cipher(string, key):
     return chip
 
 def XOR_unchiper(string, key):
-    # print(chip.bit_length())a asdk
+    # print(chip.bit_length()) # test a asdk
     # return chip.to_bytes((chip.bit_length() + 7) // 8, 'big').decode()
     return XOR_cipher(string, key)
 
