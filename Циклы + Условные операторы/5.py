@@ -7,6 +7,7 @@ while result < to:
     F1 = F2
     F2 = result
     if result < to:
-        print(result)
+        if result % 2 == 0:
+            print(result)
     else:
         pass
