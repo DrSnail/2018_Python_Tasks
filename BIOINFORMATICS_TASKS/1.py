@@ -23,7 +23,7 @@ def createParser():
                         default="/media/drsnail/Linux/Test_Genome/new.bam")
     parser.add_argument('-f', '--reference',
                         help="reference file is required. The path should start from '/'. For example: -f /media/drsnail/Linux/Test Genome/genome_snp.fa",
-                        default="D:\Google Chrome Download\chrY.fa")
+                        default=r"C:\Users\guard\Downloads\chrY.fa")
     parser.add_argument('-t', '--templocation', help="Due processing some temp file will have been created",
                         default="/media/drsnail/Linux/Test_Genome/")
     parser.add_argument('-e', '--excel', help="Sepcify for working with excel file")
@@ -59,7 +59,9 @@ class RefMassive():
             self.C = 0
             self.N = []
             i = 0
-            for line in self.reference_massive[1:].reverse():
+            temp_massive = self.reference_massive[1:]
+            temp_massive.reverse()
+            for line in temp_massive:
                 for pos in line:
                     i += 1
                     if pos == ("A" or "a"):
@@ -215,3 +217,9 @@ namespace = parser.parse_args(sys.argv[1:])
 reference = RefMassive(namespace.reference)
 reference.count_ATGC()
 print(reference.A)
+print(len(reference.reference_massive))
+index_from, pos_from = reference.get_position(100000)
+index_to, pos_to = reference.get_position(100100)
+temp_reference = "".join(reference.reference_massive).
+temp_reference = re.sub(r"\n", temp_reference)
+print(len(reference.reference_massive))
