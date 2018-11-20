@@ -11,6 +11,7 @@ import gc
 import openpyxl
 import pandas
 from openpyxl import load_workbook
+from importlib import reload
 
 
 def createParser():
@@ -38,13 +39,25 @@ class RefMassive():
         # self.reference_shortname = os.path.join(re.search(r"/.+/", self.referencefile_adress)[0],
         #                                         self.reference_shortname)
         self.two_dimensional_list = False
-        self.__get_massive()
+        self.get_string()
 
     # Функция прочитывает все строки из референсного файла
     def __get_massive(self):
         with open("{reference}".format(reference=self.referencefile_adress), "r") as f:
-            self.reference_massive = f.readlines()
+            self.reference_massive = f.read().splitlines()
             self.lenght = len(self.reference_massive[1]) - 1
+
+    def get_string(self):
+        """
+        Делает строку с референсным файлом
+        :return: None
+        :rtype: None
+        """
+        with open("{reference}".format(reference=self.referencefile_adress), "r") as f:
+            self.reference_massive = f.read().splitlines()
+            for i in range(0, len(self.reference_massive)):
+                self.reference_massive[i] = re.sub(r"(?![>ATGCatgchrYXyxnN.0-9]).+", "", self.reference_massive[i])
+            self.reference_massive = "".join(self.reference_massive)
 
     def count_ATGC(self):
         """
@@ -76,6 +89,25 @@ class RefMassive():
                         self.N.append([i])
         else:
             raise NameError
+
+    def two_dimensional_chr(self):
+        r = re.compile(r">[chrYXyx.0-9]+[^NATGCnatgc\s]") # >[chrYXyx.0-9]+[^NATGCnatgc\s]
+        self.chr_name = list(filter(r.match, self.reference_massive))
+        self.reference_massive = re.split(r">", self.reference_massive)
+        for i in range(0, len(self.reference_massive)):
+            try:
+                match = re.findall(r"([chrYXyxnN.0-9]+[^NATGCnatgc\s])(\w+)", self.reference_massive[i])
+            except TypeError:
+                continue
+            try:
+                temp = []
+                temp.append(">" + match[0][0])
+                temp.append(match[0][1])
+            except IndexError:
+                continue
+            self.reference_massive[i] = temp
+        self.reference_massive.pop(0)
+        self.two_dimensional_list = True
 
     # Находит индексы, где массив содержит название хромосомы, затем возвращает в это же место только лишь название хромосомы
     def sort_reference_by_chr(self, short=False):
@@ -215,11 +247,13 @@ parser = createParser()
 namespace = parser.parse_args(sys.argv[1:])
 
 reference = RefMassive(namespace.reference)
+reference.get_string()
+reference.two_dimensional_chr()
 reference.count_ATGC()
-print(reference.A)
-print(len(reference.reference_massive))
-index_from, pos_from = reference.get_position(100000)
-index_to, pos_to = reference.get_position(100100)
-temp_reference = "".join(reference.reference_massive).
-temp_reference = re.sub(r"\n", temp_reference)
-print(len(reference.reference_massive))
+# print(reference.A)
+# print(len(reference.reference_massive))
+# index_from, pos_from = reference.get_position(100000)
+# index_to, pos_to = reference.get_position(100100)
+# temp_reference = "".join(reference.reference_massive)
+# temp_reference = re.sub(r"\n", temp_reference, string="")
+# print(len(reference.reference_massive))
