@@ -6,12 +6,15 @@ class Operator():
         if isinstance(operand1, Variable):
             self._operand1 = operand1.var_value
             self.__operand1_is_Variable = True
+            self.__operand1 = operand1
         else:
+            self.__operand1_is_Variable = False
             self._operand1 = operand1
         if isinstance(operand2, Variable):
             self._operand2 = operand2.var_value
             self.__operand2_is_Variable = True
         else:
+            self.__operand2_is_Variable = False
             self._operand2 = operand2
         self._result = None
 
@@ -29,6 +32,8 @@ class Operator():
     def get_result(self, show: bool = False):
         if self._result == None:
             raise ResultReturnError()
+        if self.__operand1_is_Variable:
+            self.__operand1.var_value = self._result
         if show == True:
             print(self._result)
         else:
