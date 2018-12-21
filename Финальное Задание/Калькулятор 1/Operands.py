@@ -2,8 +2,8 @@ class ResultReturnError(Exception):
     def __str__(self):
         return "Result is equal None"
 
-class Operand():
-    def __init__(self, operand1: int, operand2: int):
+class Operator():
+    def __init__(self, operand1: int or float, operand2: int or float):
         self._operand1 = operand1
         self._operand2 = operand2
         self._result = None
@@ -29,24 +29,45 @@ class Operand():
         else:
             raise TypeError("Variable \"show\" should to be either True or False")
 
-class ADD(Operand):
+
+class ADD(Operator):
     def calculate(self):
         self._result = self._operand1 + self._operand2
 
-class SUB(Operand):
+class SUB(Operator):
     def calculate(self):
         self._result = self._operand1 - self._operand2
 
-class MUL(Operand):
+class MUL(Operator):
     def calculate(self):
         self._result = self._operand1 * self._operand2
 
-class DIV(Operand):
+class DIV(Operator):
     def calculate(self):
         self._result = self._operand1 / self._operand2
 
+        if isinstance(self._operand1, int):
+            self._result = int(self._result)
+        else:
+            self._result = float(self._result)
+
 
 if __name__ == "__main__":
-    custom_input = ADD(2, 4)
+    var1 = 10
+    var2 = 2
+
+    custom_input = ADD(var1, var2)
     custom_input.calculate()
     custom_input.get_result(show = True)
+
+    custom_input = SUB(var1, var2)
+    custom_input.calculate()
+    custom_input.get_result(show=True)
+
+    custom_input = MUL(var1, var2)
+    custom_input.calculate()
+    custom_input.get_result(show=True)
+
+    custom_input = DIV(var1, var2)
+    custom_input.calculate()
+    custom_input.get_result(show=True)
