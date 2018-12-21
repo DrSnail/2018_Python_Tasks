@@ -50,7 +50,9 @@ if __name__ == "__main__":
 
         # Проверка пользовательского ввода
         try:
-            if len(custom_input) < 3 or len(custom_input) > 3:
+            if "PRINT" in custom_input and (len(custom_input) < 2 or len(custom_input) > 2):
+                raise InputError
+            elif (len(custom_input) < 3 or len(custom_input) > 3) and not "PRINT" in custom_input:
                 raise InputError
             elif custom_input[0] not in valid_commands:
                 raise CommandInputError
@@ -63,10 +65,24 @@ if __name__ == "__main__":
             var1_float = True
         else:
             var1_float = False
-        if "." in custom_input[2] or "," in custom_input[2]:
-            var2_float = True
-        else:
-            var2_float = False
+        try:
+            if "." in custom_input[2] or "," in custom_input[2]:
+                var2_float = True
+            else:
+                var2_float = False
+        except IndexError:
+            pass
+
+        if custom_input[0] == "PRINT":
+            if custom_input[1] in dynamic_user_variables_dic:
+                pass
+            else:
+                try:
+                    raise VariablesTypeError
+                except VariablesTypeError as err:
+                    log.warning(err.__str__())
+                    continue
+            print(dynamic_user_variables_dic[custom_input[1]].var_value)
 
         # Проверка на команду SET. Если второе значение не цифра вообще, то проверяем, может это значение пользоватльская переменная?
         if custom_input[0] == "SET":
@@ -101,5 +117,6 @@ if __name__ == "__main__":
             command = ADD(custom_input[1], custom_input[2])
             command.calculate()
             command.get_result(show=True)
+
 
 

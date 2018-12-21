@@ -1,7 +1,8 @@
 from Final_task.Calculator_1.Calc_Classes.ERRORS import *
+from typing import Union
 
 class Variable():
-    def __init__(self, var_name: str, var_value: int or float):
+    def __init__(self, var_name: str, var_value: Union[int, float]):
         """
         Класс для любых пользовательских переменных
         :param var_name: Имя переменной
