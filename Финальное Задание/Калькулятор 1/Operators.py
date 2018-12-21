@@ -3,6 +3,9 @@ class ResultReturnError(Exception):
         return "Result is equal None"
 
 class Operator():
+    """
+    test
+    """
     def __init__(self, operand1: int or float, operand2: int or float):
         self._operand1 = operand1
         self._operand2 = operand2
