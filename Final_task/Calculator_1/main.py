@@ -7,14 +7,30 @@ import logging
 dynamic_input_dic = {}
 dynamic_user_variables_dic = {}
 var1 = None
+var1_float = None
 var2 = None
+var2_float = None
 log = logging.getLogger("Errors")
 
 def make_a_command(custom_input):
-    try:
-        custom_input = int(custom_input)
-    except ValueError:
-        pass
+    """
+    Конвертирует пользовательский ввод в int
+    :param custom_input: строка, которую нужно конвертировать
+    :type custom_input: int, float, Variable
+    :return:
+    :rtype:
+    """
+    for i in range(1, len(custom_input)):
+        if "." in custom_input[i] or "," in custom_input[i]:
+            try:
+                custom_input[i] = float(custom_input[i])
+            except ValueError:
+                custom_input[i] = dynamic_user_variables_dic[custom_input[1]]
+        else:
+            try:
+                custom_input[i] = int(custom_input[i])
+            except ValueError:
+                custom_input[i] = dynamic_user_variables_dic[custom_input[1]]
     return custom_input
 
 if __name__ == "__main__":
@@ -26,6 +42,7 @@ if __name__ == "__main__":
         if custom_input[0] == "q":
             break
 
+        # Проверка пользовательского ввода
         try:
             if len(custom_input) < 3 or len(custom_input) > 3:
                 raise InputError
@@ -34,14 +51,34 @@ if __name__ == "__main__":
         except InputError as err:
             log.warning(err.__str__())
             continue
-        for i in range(1, len(custom_input)):
-            custom_input[i] = make_a_command(custom_input[i])
 
+        # Проверка, является ли переменная значением с точкой, или нет
+        if "." in custom_input[1] or "," in custom_input[1]:
+            var1_float = True
+        else:
+            var1_float = False
+        if "." in custom_input[2] or "," in custom_input[2]:
+            var2_float = True
+        else:
+            var2_float = False
+
+        # Проверка на команду SET
         if custom_input[0] == "SET":
             try:
-                dynamic_user_variables_dic[custom_input[1]] = Variable(custom_input[1], int(custom_input[2]))
+                if var2_float:
+                    dynamic_user_variables_dic[custom_input[1]] = Variable(custom_input[1], float(custom_input[2]))
+                else:
+                    dynamic_user_variables_dic[custom_input[1]] = Variable(custom_input[1], int(custom_input[2]))
+                continue
             except Exception as err:
+                dynamic_user_variables_dic[custom_input[1]] = Variable(custom_input[1], dynamic_user_variables_dic[2].var_value)
+                continue
                 log.warning(err)
+
+        # Преобразует строки в соответствующие значения
+        custom_input = make_a_command(custom_input)
+
+        # Проверка на ввод комманд
         if custom_input[0] == "ADD":
             command = ADD(custom_input[1], custom_input[2])
             command.calculate()
