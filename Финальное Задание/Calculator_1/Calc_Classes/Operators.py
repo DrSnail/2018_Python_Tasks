@@ -1,20 +1,24 @@
-class ResultReturnError(Exception):
-    def __str__(self):
-        return "Result is equal None"
+from .Variables import Variable
+from .ERRORS import *
 
 class Operator():
-    """
-    test
-    """
-    def __init__(self, operand1: int or float, operand2: int or float):
-        self._operand1 = operand1
-        self._operand2 = operand2
+    def __init__(self, operand1: int or float or Variable, operand2: int or float or Variable):
+        if isinstance(operand1, Variable):
+            self._operand1 = operand1.var_value
+            self.__operand1_is_Variable = True
+        else:
+            self._operand1 = operand1
+        if isinstance(operand2, Variable):
+            self._operand2 = operand2.var_value
+            self.__operand2_is_Variable = True
+        else:
+            self._operand2 = operand2
         self._result = None
 
     def get_operands(self):
         return self._operand1, self._operand2
 
-    def get_operand(self, operand1 = True):
+    def get_operand(self, operand1: bool = True):
         if operand1 == True:
             return self._operand1
         elif operand1 == False:
@@ -22,16 +26,13 @@ class Operator():
         else:
             raise TypeError("Variable \"first\" should to be either True or False")
 
-    def get_result(self, show = False):
+    def get_result(self, show: bool = False):
         if self._result == None:
             raise ResultReturnError()
         if show == True:
             print(self._result)
-        elif show == False:
-            return self._result
         else:
-            raise TypeError("Variable \"show\" should to be either True or False")
-
+            return self._result
 
 class ADD(Operator):
     def calculate(self):
