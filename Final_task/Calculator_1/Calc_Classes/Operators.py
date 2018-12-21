@@ -1,5 +1,5 @@
-from .Variables import Variable
-from .ERRORS import *
+from Final_task.Calculator_1.Calc_Classes.Variables import Variable
+from Final_task.Calculator_1.Calc_Classes.ERRORS import *
 
 class Operator():
     def __init__(self, operand1: int or float or Variable, operand2: int or float or Variable):
@@ -57,12 +57,14 @@ class DIV(Operator):
 
 
 if __name__ == "__main__":
+    var_var = Variable("test", 5)
     var1 = 10
     var2 = 2
 
-    custom_input = ADD(var1, var2)
+    custom_input = ADD(var_var, var2)
     custom_input.calculate()
     custom_input.get_result(show = True)
+    print(var_var.var_value)
 
     custom_input = SUB(var1, var2)
     custom_input.calculate()
