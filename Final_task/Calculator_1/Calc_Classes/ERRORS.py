@@ -8,6 +8,10 @@ class MultipleVariablesError(Exception):
     def __str__(self):
         return ""
 
+class VariablesTypeError(Exception):
+    def __str__(self):
+        return "VariableTypeError. Не вверный тип переменной"
+
 class InputError(Exception):
     def __str__(self):
         return "Не верная комманда"
