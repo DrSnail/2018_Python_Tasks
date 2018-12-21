@@ -25,12 +25,18 @@ def make_a_command(custom_input):
             try:
                 custom_input[i] = float(custom_input[i])
             except ValueError:
-                custom_input[i] = dynamic_user_variables_dic[custom_input[1]]
+                if custom_input[i] in dynamic_user_variables_dic:
+                    custom_input[i] = dynamic_user_variables_dic[custom_input[i]]
+                else:
+                    raise VariablesTypeError
         else:
             try:
                 custom_input[i] = int(custom_input[i])
             except ValueError:
-                custom_input[i] = dynamic_user_variables_dic[custom_input[1]]
+                if custom_input[i] in dynamic_user_variables_dic:
+                    custom_input[i] = dynamic_user_variables_dic[custom_input[i]]
+                else:
+                    raise VariablesTypeError
     return custom_input
 
 if __name__ == "__main__":
@@ -70,13 +76,24 @@ if __name__ == "__main__":
                 else:
                     dynamic_user_variables_dic[custom_input[1]] = Variable(custom_input[1], int(custom_input[2]))
                 continue
-            except Exception as err:
-                dynamic_user_variables_dic[custom_input[1]] = Variable(custom_input[1], dynamic_user_variables_dic[2].var_value)
-                continue
-                log.warning(err)
+            except ValueError as err:
+                try:
+                    if custom_input[2] in dynamic_user_variables_dic:
+                        custom_input[2] = dynamic_user_variables_dic[custom_input[2]]
+                    else:
+                        raise VariablesTypeError
+                    dynamic_user_variables_dic[custom_input[1]] = Variable(custom_input[1], dynamic_user_variables_dic[custom_input[2]].var_value)
+                    continue
+                except Exception as err:
+                    log.warning(err)
+                    continue
 
         # Преобразует строки в соответствующие значения
-        custom_input = make_a_command(custom_input)
+        try:
+            custom_input = make_a_command(custom_input)
+        except VariablesTypeError as err:
+            log.warning(err.__str__())
+            continue
 
         # Проверка на ввод комманд
         if custom_input[0] == "ADD":
