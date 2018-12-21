@@ -73,6 +73,7 @@ if __name__ == "__main__":
         except IndexError:
             pass
 
+        # Обработка комманды PRINT
         if custom_input[0] == "PRINT":
             if custom_input[1] in dynamic_user_variables_dic:
                 pass
@@ -112,9 +113,21 @@ if __name__ == "__main__":
             log.warning(err.__str__())
             continue
 
-        # Проверка на ввод комманд
+        # Проверка на ввод Математических комманд
         if custom_input[0] == "ADD":
             command = ADD(custom_input[1], custom_input[2])
+            command.calculate()
+            command.get_result(show=True)
+        elif custom_input[0] == "SUB":
+            command = SUB(custom_input[1], custom_input[2])
+            command.calculate()
+            command.get_result(show=True)
+        elif custom_input[0] == "MUL":
+            command = MUL(custom_input[1], custom_input[2])
+            command.calculate()
+            command.get_result(show=True)
+        elif custom_input[0] == "DIV":
+            command = DIV(custom_input[1], custom_input[2])
             command.calculate()
             command.get_result(show=True)
 
