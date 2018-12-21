@@ -68,7 +68,7 @@ if __name__ == "__main__":
         else:
             var2_float = False
 
-        # Проверка на команду SET
+        # Проверка на команду SET. Если второе значение не цифра вообще, то проверяем, может это значение пользоватльская переменная?
         if custom_input[0] == "SET":
             try:
                 if var2_float:
@@ -78,8 +78,9 @@ if __name__ == "__main__":
                 continue
             except ValueError as err:
                 try:
+                    # Проверка, есть ли переменная в списке пользовательских переменных, если нет, то вызов ошибки
                     if custom_input[2] in dynamic_user_variables_dic:
-                        custom_input[2] = dynamic_user_variables_dic[custom_input[2]]
+                        pass
                     else:
                         raise VariablesTypeError
                     dynamic_user_variables_dic[custom_input[1]] = Variable(custom_input[1], dynamic_user_variables_dic[custom_input[2]].var_value)
