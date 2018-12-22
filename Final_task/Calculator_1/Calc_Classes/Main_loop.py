@@ -9,7 +9,7 @@ class User_input():
         self.__containt_PRINT_command = None
         self.__user_input_contain_print()
 
-    def make_a_command(self, dynamic_user_variables_dic):
+    def make_operands(self, dynamic_user_variables_dic):
         """
         Конвертирует пользовательский ввод в int
         :param custom_input: строка, которую нужно конвертировать
@@ -36,7 +36,27 @@ class User_input():
                         raise VariablesTypeError
 
     def __user_input_contain_print(self):
-        if "." in self.user_input[0] or "," in self.user_input[0]:
-            self.__containt_PRINT_command = True
+        for i in self.user_input:
+            if "." in self.user_input[0] or "," in self.user_input[0]:
+                self.__containt_PRINT_command = True
+            else:
+                self.__containt_PRINT_command = False
+
+    def try_command(self):
+        if "PRINT" in self.user_input:
+            if len(self.user_input) < 2 or len(self.user_input) > 3:
+                raise InputError
         else:
-            self.__containt_PRINT_command = False
+            if len(self.user_input) < 3 or len(self.user_input) > 3:
+                raise InputError
+            elif self.user_input not in valid_commands:
+                raise CommandInputError
+        # try:
+        #     if "PRINT" in self.user_input and (len(self.user_input) < 2 or len(self.user_input) > 2):
+        #         raise InputError
+        #     elif (len(self.user_input) < 3 or len(self.user_input) > 3) and not "PRINT" in self.user_input:
+        #         raise InputError
+        #     elif self.user_input[0] not in valid_commands:
+        #         raise CommandInputError
+        # except InputError as err:
+        #     log.warning(err.__str__())
