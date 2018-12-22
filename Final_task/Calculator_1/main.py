@@ -59,7 +59,7 @@ if __name__ == "__main__":
                 try:
                     SET(custom_input, dynamic_user_variables_dic).set_variable(dynamic_user_variables_dic)
                     continue
-                except CalcError as err:
+                except Exception as err:
                     log.warning(err.__str__())
                     continue
 
