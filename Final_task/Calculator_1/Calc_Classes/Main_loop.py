@@ -12,7 +12,11 @@ class User_input():
         self._made_operands = None
         self.__print_command = False
         self.__print_or_return_command = None
-        self._check_command(user_input)
+        self._check_command()
+        self._split_input(user_input)
+
+    def _split_input(self, user_input):
+        self.user_input = user_input.split()
 
     def _make_operands(self, dynamic_user_variables_dic):
         """
@@ -41,23 +45,16 @@ class User_input():
                         raise VariablesTypeError
         self._made_operands = True
 
-    def _check_command(self, user_input):
+    def _check_command(self, user_input:str = None):
         """
         Проверка пользовательской команды на валидность
         :return:
         :rtype:
         """
-        self.user_input = user_input.split()
-        if "PRINT" in self.user_input:
+        if "PRINT" in self.user_input or "RETURN" in self.user_input or "INTO" in self.user_input:
             self.__print_or_return_command = True
             if len(self.user_input) < 2 or len(self.user_input) > 3:
                 raise InputError
-        elif "RETURN" in self.user_input:
-            self.__print_or_return_command = True
-            pass
-        elif "DEF" or "CALL" in self.user_input:
-            if self.user_input[0] not in valid_commands:
-                raise CommandInputError
         else:
             if len(self.user_input) < 3 or len(self.user_input) > 3:
                 raise InputError
@@ -133,11 +130,12 @@ class Functions(Commands):
     def __init__(self, user_input: str, dynamic_user_variables_dic: dict):
         # self.user_input = user_input.split(sep=" ; ")
         super().__init__(user_input, dynamic_user_variables_dic)
+        self.__make_user_input(user_input)
 
     def _make_operands(self, dynamic_user_variables_dic):
         pass
-    def _check_command(self, user_input:str):
-        self.__make_user_input(user_input)
+    def _check_command(self, user_input:str = None):
+        pass
 
     def __make_user_input(self, user_input:str):
         self.user_input:list = user_input.split(sep=" : ")

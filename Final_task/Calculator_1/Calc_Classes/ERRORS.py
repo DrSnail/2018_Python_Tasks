@@ -1,4 +1,4 @@
-valid_commands_text = "ADD SUB MUL DIV SET PRINT"
+valid_commands_text = "ADD SUB MUL DIV SET PRINT DEF CALL RETURN INTO"
 valid_commands = valid_commands_text.split()
 
 class CalcError(Exception):
