@@ -9,10 +9,9 @@ class Iterator():
 
 class User_input():
     def __init__(self, user_input: str):
-        self.user_input = user_input.split()
         self._made_operands = None
         self.__print_command = False
-        self.__check_command()
+        self.__check_command(user_input)
 
     def _make_operands(self, dynamic_user_variables_dic):
         """
@@ -41,12 +40,13 @@ class User_input():
                         raise VariablesTypeError
         self._made_operands = True
 
-    def __check_command(self):
+    def __check_command(self, user_input):
         """
         Проверка пользовательской команды на валидность
         :return:
         :rtype:
         """
+        self.user_input = user_input.split()
         if "PRINT" in self.user_input:
             self.__print_command = True
             if len(self.user_input) < 2 or len(self.user_input) > 3:
@@ -127,10 +127,23 @@ class PRINT(Commands):
 
 class Functions(Commands):
     def __init__(self, user_input: str, dynamic_user_variables_dic: dict):
+        # self.user_input = user_input.split(sep=" ; ")
+
         super().__init__(user_input, dynamic_user_variables_dic)
 
     def _make_operands(self, dynamic_user_variables_dic):
         pass
+
+    def __check_command(self, user_input:str):
+        self.__make_user_input(user_input)
+
+    def __make_user_input(self, user_input:str):
+        self.user_input:list = user_input.split(sep=" : ")
+        self.user_input[-1]:list = self.user_input[-1].split(sep=" ; ")
+        self.user_input[1]:list = self.user_input[0].split()
+        self.user_input[0]:list = self.user_input[0].split()
+
+
 
 class DEF(Commands):
     pass
