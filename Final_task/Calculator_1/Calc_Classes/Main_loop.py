@@ -11,12 +11,10 @@ class User_input():
     def __init__(self, user_input: str):
         self.user_input = user_input.split()
         self._made_operands = None
-        try:
-            self.__check_command()
-        except InputError as err:
-            log.warning(err.__str__())
+        self.__print_command = False
+        self.__check_command()
 
-    def make_operands(self, dynamic_user_variables_dic):
+    def _make_operands(self, dynamic_user_variables_dic):
         """
         Конвертирует пользовательский ввод в int or float or Variable
         :param user_input: строка, которую нужно конвертировать
@@ -43,7 +41,6 @@ class User_input():
                         raise VariablesTypeError
         self._made_operands = True
 
-
     def __check_command(self):
         """
         Проверка пользовательской команды на валидность
@@ -51,25 +48,33 @@ class User_input():
         :rtype:
         """
         if "PRINT" in self.user_input:
+            self.__print_command = True
             if len(self.user_input) < 2 or len(self.user_input) > 3:
                 raise InputError
         else:
             if len(self.user_input) < 3 or len(self.user_input) > 3:
                 raise InputError
-            elif self.user_input not in valid_commands:
+            elif self.user_input[0] not in valid_commands:
                 raise CommandInputError
 
-        if "." in self.user_input[1] or "," in self.user_input[1]:
-            self._var1_float = True
-        else:
-            self._var1_float = False
-        if "." in self.user_input[2] or "," in self.user_input[2]:
-            self._var2_float = True
-        else:
-            self._var2_float = False
+        if not self.__print_command:
+            if "." in self.user_input[1] or "," in self.user_input[1]:
+                self._var1_float = True
+            else:
+                self._var1_float = False
+            if "." in self.user_input[2] or "," in self.user_input[2]:
+                self._var2_float = True
+            else:
+                self._var2_float = False
 
 
 class Commands(User_input):
+    def __init__(self, user_input: str, dynamic_user_variables_dic: dict, user_command_is_set = False):
+        super().__init__(user_input)
+        if not user_command_is_set:
+            self._make_operands(dynamic_user_variables_dic)
+        self._dynamic_user_variables_dic = dynamic_user_variables_dic
+
     def get_operands(self):
         """
         Возвращает операнд (оба)
@@ -85,35 +90,29 @@ class Commands(User_input):
         return self.user_input[2]
 
 class SET(Commands):
-    def __init__(self, user_input: str):
-        super().__init__(user_input)
+    def __init__(self, user_input: str, dynamic_user_variables_dic: dict):
+        super().__init__(user_input, dynamic_user_variables_dic, True)
 
     def get_right_operand(self) -> None:
         pass
     def get_operands(self) -> None:
         pass
 
-    def make_variable(self, dynamic_user_variables_dic: dict = None):
+    def set_variable(self, dynamic_user_variables_dic: dict = None):
          if dynamic_user_variables_dic:
              # Проверка, есть ли переменная в списке пользовательских переменных, если нет, то вызов ошибки
              if self.user_input[2] in dynamic_user_variables_dic:
-                 dynamic_user_variables_dic[self.user_input[1]] = Variable(self.user_input[1], dynamic_user_variables_dic[self.user_input[2]].var_value)
+                 self._dynamic_user_variables_dic[self.user_input[1]] = Variable(self.user_input[1], dynamic_user_variables_dic[self.user_input[2]].var_value)
              else:
                  raise VariablesTypeError
          else:
              if self._var2_float:
-                 dynamic_user_variables_dic[self.user_input[1]] = Variable(self.user_input[1], float(self.user_input[2]))
+                 self._dynamic_user_variables_dic[self.user_input[1]] = Variable(self.user_input[1], float(self.user_input[2]))
              else:
-                 dynamic_user_variables_dic[self.user_input[1]] = Variable(self.user_input[1], int(self.user_input[2]))
+                 self._dynamic_user_variables_dic[self.user_input[1]] = Variable(self.user_input[1], int(self.user_input[2]))
 
 class PRINT(Commands):
     def __init__(self, user_input: str, dynamic_user_variables_dic: dict):
-        super().__init__(user_input)
+        super().__init__(user_input, dynamic_user_variables_dic)
 
-        # Обработка комманды PRINT
-        if self.user_input[1] in dynamic_user_variables_dic:
-            pass
-        else:
-            raise VariablesTypeError
-
-        print(dynamic_user_variables_dic[self.user_input[1]].var_value)
+        print(dynamic_user_variables_dic[self.user_input[1].var_name].var_value)

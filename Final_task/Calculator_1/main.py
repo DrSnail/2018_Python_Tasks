@@ -38,65 +38,63 @@ def make_a_command(custom_input):
 if __name__ == "__main__":
     while True:
         custom_input = input("$:")
-        inpt = User_input(input("$:"))
 
         # Если ввели 'q', то завершается работа программы
         if custom_input == "q":
             break
 
         # Обработка комманды PRINT
-        elif inpt.user_input[0] == "PRINT":
+        elif "PRINT" in custom_input:
             try:
                 PRINT(custom_input, dynamic_user_variables_dic)
-            except VariablesTypeError as err:
+            except CalcError as err:
                 log.warning(err.__str__())
                 continue
 
-        # Проверка на команду SET. Если второе значение не цифра вообще, то проверяем, может это значение пользоватльская переменная?
-        if inpt.user_input[0] == "SET":
+        # Проверка на команду SET.
+        elif "SET" in custom_input:
             try:
-                if var2_float:
-                    dynamic_user_variables_dic[inpt.user_input[1]] = Variable(inpt.user_input[1], float(inpt.user_input[2]))
-                else:
-                    dynamic_user_variables_dic[inpt.user_input[1]] = Variable(inpt.user_input[1], int(inpt.user_input[2]))
-                continue
-            except ValueError as err:
+                SET(custom_input, dynamic_user_variables_dic).set_variable()
+            except VariablesTypeError as err:
                 try:
-                    # Проверка, есть ли переменная в списке пользовательских переменных, если нет, то вызов ошибки
-                    if inpt.user_input[2] in dynamic_user_variables_dic:
-                        pass
-                    else:
-                        raise VariablesTypeError
-                    dynamic_user_variables_dic[inpt.user_input[1]] = Variable(inpt.user_input[1], dynamic_user_variables_dic[inpt.user_input[2]].var_value)
+                    SET(custom_input, dynamic_user_variables_dic).set_variable(dynamic_user_variables_dic)
                     continue
-                except Exception as err:
-                    log.warning(err)
+                except CalcError as err:
+                    log.warning(err.__str__())
                     continue
-
-        # Преобразует строки в соответствующие значения
-        try:
-            inpt.make_operands()
-        except VariablesTypeError as err:
-            log.warning(err.__str__())
-            continue
 
         # Проверка на ввод Математических комманд
-        if inpt.user_input[0] == "ADD":
-            command = ADD(inpt.user_input[1], inpt.user_input[2])
+        elif "ADD" in custom_input:
+            try:
+                command = ADD(custom_input, dynamic_user_variables_dic)
+            except CalcError as err:
+                log.warning(err.__str__())
+                continue
             command.calculate()
             command.get_result(show=True)
-        elif user_input[0] == "SUB":
-            command = SUB(inpt.user_input[1], inpt.user_input[2])
+        elif "SUB" in custom_input:
+            try:
+                command = SUB(custom_input, dynamic_user_variables_dic)
+            except CalcError as err:
+                log.warning(err.__str__())
+                continue
             command.calculate()
             command.get_result(show=True)
-        elif user_input[0] == "MUL":
-            command = MUL(inpt.user_input[1], inpt.user_input[2])
+        elif "MUL" in custom_input:
+            try:
+                command = MUL(custom_input, dynamic_user_variables_dic)
+            except CalcError as err:
+                log.warning(err.__str__())
+                continue
             command.calculate()
             command.get_result(show=True)
-        elif user_input[0] == "DIV":
-            command = DIV(inpt.user_input[1], inpt.user_input[2])
+        elif "DIV" in custom_input:
+            try:
+                command = DIV(custom_input, dynamic_user_variables_dic)
+            except CalcError as err:
+                log.warning(err.__str__())
+                continue
             command.calculate()
             command.get_result(show=True)
-
-
-
+        else:
+            log.warning("Не верно введена комманда")

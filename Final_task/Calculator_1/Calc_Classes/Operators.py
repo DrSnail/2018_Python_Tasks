@@ -1,9 +1,13 @@
 from Final_task.Calculator_1.Calc_Classes.Variables import Variable
 from Final_task.Calculator_1.Calc_Classes.ERRORS import *
+from Final_task.Calculator_1.Calc_Classes.Main_loop import *
 from typing import Union
 
-class Operator():
-    def __init__(self, operand1: Union[int, float, Variable], operand2: Union[int, float, Variable]):
+class Operator(Commands):
+    def __init__(self, custom_input:str, dynamic_user_variables_dic):
+        super().__init__(custom_input, dynamic_user_variables_dic)
+        operand1 = self.user_input[1]
+        operand2 = self.user_input[2]
         """
         Базовый класс для всех операторов
         :param operand1: Первая переменная
