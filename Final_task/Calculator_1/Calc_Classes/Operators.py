@@ -30,29 +30,6 @@ class Operator():
             self._operand2 = operand2
         self._result = None
 
-    def get_operands(self):
-        """
-        Возвращает операнд (оба)
-        :return:
-        :rtype:
-        """
-        return self._operand1, self._operand2
-
-    def get_operand(self, operand1: bool = True):
-        """
-        Возвращает операнды (Один)
-        :param operand1: Вернуть первый операнд? Если False, то второй
-        :type operand1:
-        :return:
-        :rtype:
-        """
-        if operand1 == True:
-            return self._operand1
-        elif operand1 == False:
-            return self._operand2
-        else:
-            raise TypeError("Variable \"first\" should to be either True or False")
-
     def get_result(self, show: bool = False):
         """
         Вернуть результат операции.
