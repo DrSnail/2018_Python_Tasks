@@ -55,7 +55,7 @@ if __name__ == "__main__":
         elif "SET" in custom_input:
             try:
                 SET(custom_input, dynamic_user_variables_dic).set_variable()
-            except VariablesTypeError as err:
+            except ValueError as err:
                 try:
                     SET(custom_input, dynamic_user_variables_dic).set_variable(dynamic_user_variables_dic)
                     continue
