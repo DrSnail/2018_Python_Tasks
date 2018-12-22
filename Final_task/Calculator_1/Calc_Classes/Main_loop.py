@@ -72,10 +72,9 @@ class User_input():
 
 
 class Commands(User_input):
-    def __init__(self, user_input: str, dynamic_user_variables_dic: dict, user_command_is_set = False):
+    def __init__(self, user_input: str, dynamic_user_variables_dic: dict, skip_make_operands = False):
         super().__init__(user_input)
-        if not user_command_is_set:
-            self._make_operands(dynamic_user_variables_dic)
+        self._make_operands(dynamic_user_variables_dic)
         self._dynamic_user_variables_dic = dynamic_user_variables_dic
 
     def get_operands(self):
@@ -97,11 +96,14 @@ class Commands(User_input):
 
 class SET(Commands):
     def __init__(self, user_input: str, dynamic_user_variables_dic: dict):
-        super().__init__(user_input, dynamic_user_variables_dic, True)
+        super().__init__(user_input, dynamic_user_variables_dic)
 
     def get_right_operand(self) -> None:
         pass
     def get_operands(self) -> None:
+        pass
+
+    def _make_operands(self, dynamic_user_variables_dic):
         pass
 
     def set_variable(self, dynamic_user_variables_dic: dict = None):
@@ -126,10 +128,9 @@ class PRINT(Commands):
 class Functions(Commands):
     def __init__(self, user_input: str, dynamic_user_variables_dic: dict):
         super().__init__(user_input, dynamic_user_variables_dic)
-        self._make_operands(dynamic_user_variables_dic)
 
     def _make_operands(self, dynamic_user_variables_dic):
-
+        pass
 
 class DEF(Commands):
     pass
