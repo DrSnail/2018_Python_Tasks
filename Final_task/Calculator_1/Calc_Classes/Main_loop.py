@@ -51,6 +51,9 @@ class User_input():
             self.__print_command = True
             if len(self.user_input) < 2 or len(self.user_input) > 3:
                 raise InputError
+        elif "DEF" or "CALL" in self.user_input:
+            if self.user_input[0] not in valid_commands:
+                raise CommandInputError
         else:
             if len(self.user_input) < 3 or len(self.user_input) > 3:
                 raise InputError
@@ -89,6 +92,9 @@ class Commands(User_input):
     def get_right_operand(self):
         return self.user_input[2]
 
+    # def _make_operands(self, dynamic_user_variables_dic):
+    #     self._make_operands(dynamic_user_variables_dic)
+
 class SET(Commands):
     def __init__(self, user_input: str, dynamic_user_variables_dic: dict):
         super().__init__(user_input, dynamic_user_variables_dic, True)
@@ -116,3 +122,17 @@ class PRINT(Commands):
         super().__init__(user_input, dynamic_user_variables_dic)
 
         print(dynamic_user_variables_dic[self.user_input[1].var_name].var_value)
+
+class Functions(Commands):
+    def __init__(self, user_input: str, dynamic_user_variables_dic: dict):
+        super().__init__(user_input, dynamic_user_variables_dic)
+        self._make_operands(dynamic_user_variables_dic)
+
+    def _make_operands(self, dynamic_user_variables_dic):
+
+
+class DEF(Commands):
+    pass
+
+class CALC:
+    pass

@@ -1,4 +1,5 @@
-valid_commands = ["ADD", "SUB", "MUL", "DIV", "SET", "PRINT"]
+valid_commands_text = "ADD SUB MUL DIV SET PRINT"
+valid_commands = valid_commands_text.split()
 
 class CalcError(Exception):
     def __str__(self):
