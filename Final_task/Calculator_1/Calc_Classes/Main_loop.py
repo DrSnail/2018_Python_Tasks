@@ -11,7 +11,8 @@ class User_input():
     def __init__(self, user_input: str):
         self._made_operands = None
         self.__print_command = False
-        self.__check_command(user_input)
+        self.__print_or_return_command = None
+        self._check_command(user_input)
 
     def _make_operands(self, dynamic_user_variables_dic):
         """
@@ -40,7 +41,7 @@ class User_input():
                         raise VariablesTypeError
         self._made_operands = True
 
-    def __check_command(self, user_input):
+    def _check_command(self, user_input):
         """
         Проверка пользовательской команды на валидность
         :return:
@@ -48,9 +49,12 @@ class User_input():
         """
         self.user_input = user_input.split()
         if "PRINT" in self.user_input:
-            self.__print_command = True
+            self.__print_or_return_command = True
             if len(self.user_input) < 2 or len(self.user_input) > 3:
                 raise InputError
+        elif "RETURN" in self.user_input:
+            self.__print_or_return_command = True
+            pass
         elif "DEF" or "CALL" in self.user_input:
             if self.user_input[0] not in valid_commands:
                 raise CommandInputError
@@ -60,7 +64,7 @@ class User_input():
             elif self.user_input[0] not in valid_commands:
                 raise CommandInputError
 
-        if not self.__print_command:
+        if not self.__print_or_return_command:
             if "." in self.user_input[1] or "," in self.user_input[1]:
                 self._var1_float = True
             else:
@@ -96,14 +100,14 @@ class Commands(User_input):
 
 class SET(Commands):
     def __init__(self, user_input: str, dynamic_user_variables_dic: dict):
+        # переопределил метод _make_operands()
         super().__init__(user_input, dynamic_user_variables_dic)
 
+    def _make_operands(self, dynamic_user_variables_dic):
+        pass
     def get_right_operand(self) -> None:
         pass
     def get_operands(self) -> None:
-        pass
-
-    def _make_operands(self, dynamic_user_variables_dic):
         pass
 
     def set_variable(self, dynamic_user_variables_dic: dict = None):
@@ -128,25 +132,34 @@ class PRINT(Commands):
 class Functions(Commands):
     def __init__(self, user_input: str, dynamic_user_variables_dic: dict):
         # self.user_input = user_input.split(sep=" ; ")
-
         super().__init__(user_input, dynamic_user_variables_dic)
 
     def _make_operands(self, dynamic_user_variables_dic):
         pass
-
-    def __check_command(self, user_input:str):
+    def _check_command(self, user_input:str):
         self.__make_user_input(user_input)
 
     def __make_user_input(self, user_input:str):
         self.user_input:list = user_input.split(sep=" : ")
-        self.user_input[-1]:list = self.user_input[-1].split(sep=" ; ")
-        self.user_input[1]:list = self.user_input[0].split()
         self.user_input[0]:list = self.user_input[0].split()
+        self.user_input[1]:list = self.user_input[1].split()
+        self.user_input[-1]:list = self.user_input[-1].split(sep=" ; ")
+        for index in range(0, len(self.user_input[-1])):
+            self.user_input[-1][index] = self.user_input[-1][index].split()
+        # Может так случится, что в конце команды после ; нет никаких пробела. Надо это удалить
+        for main_index in range(1, len(self.user_input)):
+            for index in range(0, len(self.user_input[main_index])):
+                while self.user_input[main_index][index][-1] == " " or self.user_input[main_index][index][-1] == ";":
+                    del self.user_input[main_index][index][-1]
 
 
-
-class DEF(Commands):
+class DEF(Functions):
     pass
 
-class CALC:
+class CALC(Functions):
     pass
+
+if __name__ == "__main__":
+    dynamic_user_variables_dic = {}
+    test = Functions('DEF pow2 : x y z a : MUL x x ; ADD x y ; RETURN x ;', dynamic_user_variables_dic)
+    print("READY")
