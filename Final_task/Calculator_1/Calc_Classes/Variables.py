@@ -22,3 +22,7 @@ class Variable():
 
     def print_value(self):
         print(self.var_value)
+
+class Variable_Function(Variable):
+    def __init__(self, var_name: str, var_value: Union[int, float]):
+        super().__init__(self, var_name, var_value)

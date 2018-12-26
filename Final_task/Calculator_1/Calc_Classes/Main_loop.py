@@ -1,6 +1,7 @@
 from Final_task.Calculator_1.Calc_Classes.ERRORS import *
 from Final_task.Calculator_1.Calc_Classes.Variables import *
 import logging
+import re
 
 log = logging.getLogger("Errors")
 
@@ -12,8 +13,8 @@ class User_input():
         self._made_operands = None
         self.__print_command = False
         self.__print_or_return_command = None
-        self._check_command()
         self._split_input(user_input)
+        self._check_command()
 
     def _split_input(self, user_input):
         self.user_input = user_input.split()
